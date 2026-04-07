@@ -8,12 +8,15 @@ import type { CitizenSentimentData } from "@/lib/mla-lens/pipelines/citizen-sent
 import type { MlaProfileDataSource } from "@/lib/mla-lens/pipelines/mla-profile";
 import type { NewsFeedData } from "@/lib/mla-lens/pipelines/news-feed";
 import type { ProjectFundsData } from "@/lib/mla-lens/pipelines/project-funds";
+import { deriveHomepageInsights } from "@/lib/mla-lens/homepage/insights";
 import type {
   CitizenPanelSummary,
+  HomepageScopeInfo,
   MLALensHomepageData,
   OverviewFastRead,
   OverviewFastReadCard,
 } from "@/lib/mla-lens/homepage/types";
+import { activeScope } from "@/lib/mla-lens/scope";
 
 const toneWeights: Record<string, number> = {
   Complaint: 15,
@@ -190,9 +193,27 @@ export function buildHomepageViewModel({
 }: BuildHomepageViewModelInput): MLALensHomepageData {
   const citizenSummary = deriveCitizenPanelSummary(citizenSentiment.items);
   const scoreCards = deriveScoreCards(citizenSummary);
+  const scope: HomepageScopeInfo = {
+    constituencySlug: activeScope.constituencySlug,
+    constituencyName: activeScope.constituencyName,
+    districtName: activeScope.districtName,
+    stateName: activeScope.stateName,
+    representativeName: activeScope.representativeName,
+    representativeRole: activeScope.representativeRole,
+    scopeLabel: activeScope.scopeLabel,
+    rolloutNote: activeScope.rolloutNote,
+  };
+  const scopedOverview = {
+    ...overview,
+    constituency: scope.constituencyName,
+    district: `${scope.districtName}, ${scope.stateName}`,
+    mla: scope.representativeName,
+  };
 
-  return {
-    overview,
+  const homepageData: MLALensHomepageData = {
+    scope,
+    insights: [],
+    overview: scopedOverview,
     fastRead: deriveFastRead(scoreCards),
     scoreCards,
     news: {
@@ -211,7 +232,7 @@ export function buildHomepageViewModel({
       pins: mapPins,
     },
     profile: {
-      mlaName: overview.mla,
+      mlaName: scope.representativeName,
       profile: mlaProfileData.profile,
     },
     signalSummaryCards: deriveSignalSummaryCards(
@@ -220,4 +241,8 @@ export function buildHomepageViewModel({
       projectFunds,
     ),
   };
+
+  homepageData.insights = deriveHomepageInsights(homepageData);
+
+  return homepageData;
 }

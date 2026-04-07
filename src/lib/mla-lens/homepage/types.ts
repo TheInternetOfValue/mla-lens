@@ -1,3 +1,4 @@
+import type { Insight } from "@/lib/mla-lens/homepage/insights";
 import type {
   CitizenSignal,
   MapPinData,
@@ -38,7 +39,20 @@ export interface CitizenPanelSummary {
   topIssue: string;
 }
 
+export interface HomepageScopeInfo {
+  constituencySlug: string;
+  constituencyName: string;
+  districtName: string;
+  stateName: string;
+  representativeName: string;
+  representativeRole: string;
+  scopeLabel: string;
+  rolloutNote: string;
+}
+
 export interface MLALensHomepageData {
+  scope: HomepageScopeInfo;
+  insights: Insight[];
   overview: OverviewData;
   fastRead: OverviewFastRead;
   scoreCards: ScoreCardData[];

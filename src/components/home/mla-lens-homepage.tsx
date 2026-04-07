@@ -1,6 +1,8 @@
 import { HomeHero } from "@/components/home/home-hero";
+import { InsightStrip } from "@/components/home/insight-strip";
 import { OverviewPanel } from "@/components/home/overview-panel";
 import { PageTabs } from "@/components/home/page-tabs";
+import { PilotScopeCard } from "@/components/home/pilot-scope-card";
 import { ScoresPanel } from "@/components/home/scores-panel";
 import { SignalSummaryGrid } from "@/components/home/signal-summary-grid";
 import type { MLALensHomepageData } from "@/lib/mla-lens/homepage/types";
@@ -13,7 +15,9 @@ export function MLALensHomepage({ data }: MLALensHomepageProps) {
   return (
     <div className="min-h-screen bg-black text-zinc-100">
       <div className="mx-auto max-w-7xl px-4 py-8 md:px-6 lg:px-8">
-        <HomeHero />
+        <HomeHero scope={data.scope} />
+        <PilotScopeCard scope={data.scope} />
+        <InsightStrip insights={data.insights} />
 
         <OverviewPanel fastRead={data.fastRead} overview={data.overview} />
 

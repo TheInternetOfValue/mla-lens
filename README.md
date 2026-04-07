@@ -77,6 +77,10 @@ For now:
 - pipeline adapters own fallback behavior locally
 - real scrapers and ingestion jobs can be added later without redesigning the homepage
 
+## Product Evolution Log
+
+Ongoing product-facing changes are tracked in `docs/product-evolution.md`.
+
 ## Development
 
 Install dependencies:
