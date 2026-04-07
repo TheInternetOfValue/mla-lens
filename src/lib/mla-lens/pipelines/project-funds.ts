@@ -1,8 +1,9 @@
 import { projects } from "@/data/mla-lens/projects";
-import type { ProjectData } from "@/data/mla-lens/types";
+import type { HomepageProjectItem, Provenance } from "@/lib/mla-lens/homepage/types";
 
 export interface ProjectFundsData {
-  projects: ProjectData[];
+  projects: HomepageProjectItem[];
+  provenance: Provenance;
 }
 
 async function loadProjectFundsFromSource(): Promise<ProjectFundsData | null> {
@@ -17,6 +18,10 @@ export async function getProjectFundsData(): Promise<ProjectFundsData> {
     if (sourceData) {
       return sourceData;
     }
+
+    console.warn(
+      "MLA Lens project pipeline: no live project source is configured. Using fixture-backed tentative data.",
+    );
   } catch (error) {
     console.error(
       "Failed to load project and funds data, using fixtures instead.",
@@ -24,5 +29,19 @@ export async function getProjectFundsData(): Promise<ProjectFundsData> {
     );
   }
 
-  return { projects };
+  return {
+    projects: projects.map((project) => ({
+      ...project,
+      provenance: {
+        status: "fixture",
+        label: "Fixture",
+        sourceLabel: project.source,
+      },
+    })),
+    provenance: {
+      status: "tentative",
+      label: "Tentative",
+      sourceLabel: "Fixture-backed project tracker",
+    },
+  };
 }

@@ -5,6 +5,7 @@ import { PageTabs } from "@/components/home/page-tabs";
 import { PilotScopeCard } from "@/components/home/pilot-scope-card";
 import { ScoresPanel } from "@/components/home/scores-panel";
 import { SignalSummaryGrid } from "@/components/home/signal-summary-grid";
+import { TrendStrip } from "@/components/home/trend-strip";
 import type { MLALensHomepageData } from "@/lib/mla-lens/homepage/types";
 
 interface MLALensHomepageProps {
@@ -18,6 +19,7 @@ export function MLALensHomepage({ data }: MLALensHomepageProps) {
         <HomeHero scope={data.scope} />
         <PilotScopeCard scope={data.scope} />
         <InsightStrip insights={data.insights} />
+        <TrendStrip trends={data.trends} />
 
         <OverviewPanel fastRead={data.fastRead} overview={data.overview} />
 

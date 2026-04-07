@@ -1,4 +1,5 @@
 import type { Insight } from "@/lib/mla-lens/homepage/insights";
+import type { TrendSignal } from "@/lib/mla-lens/homepage/trends";
 import type {
   CitizenSignal,
   MapPinData,
@@ -20,6 +21,28 @@ export type {
   ScoreCardData,
   SignalSummaryCard,
 };
+
+export type ProvenanceStatus = "live" | "derived" | "tentative" | "fixture";
+
+export interface Provenance {
+  status: ProvenanceStatus;
+  label: string;
+  sourceLabel?: string;
+  sourceUrl?: string;
+  updatedAt?: string;
+}
+
+export interface HomepageNewsItem extends NewsItem {
+  sourceLabel?: string;
+  sourceUrl?: string;
+  publishedAt?: string;
+  provenance: Provenance;
+}
+
+export interface HomepageProjectItem extends ProjectData {
+  sourceUrl?: string;
+  provenance: Provenance;
+}
 
 export interface OverviewFastReadCard {
   label: string;
@@ -53,20 +76,24 @@ export interface HomepageScopeInfo {
 export interface MLALensHomepageData {
   scope: HomepageScopeInfo;
   insights: Insight[];
+  trends: TrendSignal[];
   overview: OverviewData;
   fastRead: OverviewFastRead;
   scoreCards: ScoreCardData[];
   news: {
     categories: readonly string[];
-    items: NewsItem[];
+    items: HomepageNewsItem[];
+    provenance: Provenance;
   };
   citizens: {
     tones: readonly string[];
     items: CitizenSignal[];
     summary: CitizenPanelSummary;
+    provenance: Provenance;
   };
   money: {
-    projects: ProjectData[];
+    projects: HomepageProjectItem[];
+    provenance: Provenance;
   };
   map: {
     pins: MapPinData[];
@@ -74,6 +101,7 @@ export interface MLALensHomepageData {
   profile: {
     mlaName: string;
     profile: MLAProfileData;
+    provenance: Provenance;
   };
   signalSummaryCards: SignalSummaryCard[];
 }

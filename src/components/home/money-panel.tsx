@@ -1,10 +1,11 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import type { ProjectData } from "@/lib/mla-lens/homepage/types";
+import type { HomepageProjectItem } from "@/lib/mla-lens/homepage/types";
 
+import { ProvenanceBadge } from "@/components/home/provenance-badge";
 import { StatusBadge } from "@/components/home/status-badge";
 
 interface MoneyPanelProps {
-  projects: ProjectData[];
+  projects: HomepageProjectItem[];
 }
 
 export function MoneyPanel({ projects }: MoneyPanelProps) {
@@ -78,12 +79,25 @@ export function MoneyPanel({ projects }: MoneyPanelProps) {
                     <div className="flex flex-wrap items-center gap-2">
                       <p className="font-medium text-white">{project.name}</p>
                       <StatusBadge value={project.status} />
+                      <ProvenanceBadge provenance={project.provenance} />
                     </div>
                     <p className="mt-2 text-sm text-zinc-400">
                       {project.area} · {project.category}
                     </p>
                     <p className="mt-2 text-sm text-zinc-500">
-                      Source: {project.source}
+                      Source:{" "}
+                      {project.sourceUrl ? (
+                        <a
+                          href={project.sourceUrl}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="transition hover:text-zinc-300 hover:underline"
+                        >
+                          {project.source}
+                        </a>
+                      ) : (
+                        project.source
+                      )}
                     </p>
                   </div>
                   <div className="rounded-2xl border border-zinc-800 px-3 py-2 text-sm text-zinc-200">

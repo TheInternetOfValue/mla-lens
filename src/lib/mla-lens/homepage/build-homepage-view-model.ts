@@ -9,12 +9,14 @@ import type { MlaProfileDataSource } from "@/lib/mla-lens/pipelines/mla-profile"
 import type { NewsFeedData } from "@/lib/mla-lens/pipelines/news-feed";
 import type { ProjectFundsData } from "@/lib/mla-lens/pipelines/project-funds";
 import { deriveHomepageInsights } from "@/lib/mla-lens/homepage/insights";
+import { deriveHomepageTrendSignals } from "@/lib/mla-lens/homepage/trends";
 import type {
   CitizenPanelSummary,
   HomepageScopeInfo,
   MLALensHomepageData,
   OverviewFastRead,
   OverviewFastReadCard,
+  Provenance,
 } from "@/lib/mla-lens/homepage/types";
 import { activeScope } from "@/lib/mla-lens/scope";
 
@@ -209,24 +211,38 @@ export function buildHomepageViewModel({
     district: `${scope.districtName}, ${scope.stateName}`,
     mla: scope.representativeName,
   };
+  const citizenSectionProvenance: Provenance = {
+    status: "derived",
+    label: "Derived",
+    sourceLabel: "Derived from fixture-backed citizen sentiment sample",
+  };
+  const profileSectionProvenance: Provenance = {
+    status: "fixture",
+    label: "Fixture",
+    sourceLabel: "Static MLA profile fixture",
+  };
 
   const homepageData: MLALensHomepageData = {
     scope,
     insights: [],
+    trends: [],
     overview: scopedOverview,
     fastRead: deriveFastRead(scoreCards),
     scoreCards,
     news: {
       categories: newsFeed.categories,
       items: newsFeed.items,
+      provenance: newsFeed.provenance,
     },
     citizens: {
       tones: citizenSentiment.tones,
       items: citizenSentiment.items,
       summary: citizenSummary,
+      provenance: citizenSectionProvenance,
     },
     money: {
       projects: projectFunds.projects,
+      provenance: projectFunds.provenance,
     },
     map: {
       pins: mapPins,
@@ -234,6 +250,7 @@ export function buildHomepageViewModel({
     profile: {
       mlaName: scope.representativeName,
       profile: mlaProfileData.profile,
+      provenance: profileSectionProvenance,
     },
     signalSummaryCards: deriveSignalSummaryCards(
       citizenSummary,
@@ -243,6 +260,7 @@ export function buildHomepageViewModel({
   };
 
   homepageData.insights = deriveHomepageInsights(homepageData);
+  homepageData.trends = deriveHomepageTrendSignals(homepageData);
 
   return homepageData;
 }

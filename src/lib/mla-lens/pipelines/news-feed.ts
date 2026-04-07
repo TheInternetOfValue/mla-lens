@@ -1,9 +1,11 @@
 import { newsCategories, newsFeed } from "@/data/mla-lens/news-feed";
 import type { NewsItem } from "@/data/mla-lens/types";
+import type { HomepageNewsItem, Provenance } from "@/lib/mla-lens/homepage/types";
 
 export interface NewsFeedData {
   categories: readonly string[];
-  items: NewsItem[];
+  items: HomepageNewsItem[];
+  provenance: Provenance;
 }
 
 interface ParsedRssItem {
@@ -455,7 +457,7 @@ function normalizeRssItem(item: ParsedRssItem): NormalizedNewsItem | null {
   };
 }
 
-function dedupeAndRankItems(items: NormalizedNewsItem[]): NewsItem[] {
+function dedupeAndRankItems(items: NormalizedNewsItem[]): NormalizedNewsItem[] {
   const deduped = new Map<string, NormalizedNewsItem>();
 
   for (const item of items) {
@@ -489,15 +491,43 @@ function dedupeAndRankItems(items: NormalizedNewsItem[]): NewsItem[] {
 
       return right.relevanceScore - left.relevanceScore;
     })
-    .slice(0, MAX_NEWS_ITEMS)
-    .map((item, index) => ({
-      id: index + 1,
-      title: item.title,
-      tag: item.tag,
-      category: item.category,
-      date: item.date,
-      summary: item.summary,
-    }));
+    .slice(0, MAX_NEWS_ITEMS);
+}
+
+function buildLiveNewsItem(
+  item: NormalizedNewsItem,
+  index: number,
+): HomepageNewsItem {
+  return {
+    id: index + 1,
+    title: item.title,
+    tag: item.tag,
+    category: item.category,
+    date: item.date,
+    summary: item.summary,
+    sourceLabel: item.source,
+    sourceUrl: item.link,
+    publishedAt: item.publishedAt?.toISOString(),
+    provenance: {
+      status: "live",
+      label: "Live",
+      sourceLabel: item.source,
+      sourceUrl: item.link,
+      updatedAt: item.publishedAt?.toISOString(),
+    },
+  };
+}
+
+function mapFixtureNewsItem(item: NewsItem): HomepageNewsItem {
+  return {
+    ...item,
+    sourceLabel: "Fixture news sample",
+    provenance: {
+      status: "fixture",
+      label: "Fixture",
+      sourceLabel: "Static MLA Lens fixture feed",
+    },
+  };
 }
 
 async function loadNewsFeedFromSource(): Promise<NewsFeedData | null> {
@@ -527,7 +557,18 @@ async function loadNewsFeedFromSource(): Promise<NewsFeedData | null> {
 
   return {
     categories: newsCategories,
-    items,
+    items: items.map(buildLiveNewsItem),
+    provenance: {
+      status: "live",
+      label: "Live",
+      sourceLabel: "Google News RSS",
+      updatedAt:
+        normalizedItems
+          .map((item) => item.publishedAt?.toISOString())
+          .filter((value): value is string => Boolean(value))
+          .sort()
+          .at(-1) ?? new Date().toISOString(),
+    },
   };
 }
 
@@ -551,6 +592,11 @@ export async function getNewsFeedData(): Promise<NewsFeedData> {
 
   return {
     categories: newsCategories,
-    items: newsFeed,
+    items: newsFeed.map(mapFixtureNewsItem),
+    provenance: {
+      status: "fixture",
+      label: "Fixture",
+      sourceLabel: "Static MLA Lens fixture feed",
+    },
   };
 }

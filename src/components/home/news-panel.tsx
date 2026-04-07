@@ -5,13 +5,14 @@ import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import type { NewsItem } from "@/lib/mla-lens/homepage/types";
+import type { HomepageNewsItem } from "@/lib/mla-lens/homepage/types";
 
+import { ProvenanceBadge } from "@/components/home/provenance-badge";
 import { StatusBadge } from "@/components/home/status-badge";
 
 interface NewsPanelProps {
   categories: readonly string[];
-  items: NewsItem[];
+  items: HomepageNewsItem[];
 }
 
 export function NewsPanel({ categories, items }: NewsPanelProps) {
@@ -49,10 +50,38 @@ export function NewsPanel({ categories, items }: NewsPanelProps) {
                 <Badge className="border-zinc-800 bg-zinc-900 text-zinc-300">
                   {item.category}
                 </Badge>
+                <ProvenanceBadge provenance={item.provenance} />
+              </div>
+              <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-zinc-500">
+                {item.sourceLabel ? (
+                  item.sourceUrl ? (
+                    <a
+                      href={item.sourceUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="transition hover:text-zinc-300 hover:underline"
+                    >
+                      {item.sourceLabel}
+                    </a>
+                  ) : (
+                    <span>{item.sourceLabel}</span>
+                  )
+                ) : null}
                 <span className="text-xs text-zinc-500">{item.date}</span>
               </div>
               <h3 className="mt-3 text-lg font-semibold text-white">
-                {item.title}
+                {item.sourceUrl ? (
+                  <a
+                    href={item.sourceUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="transition hover:text-zinc-200 hover:underline"
+                  >
+                    {item.title}
+                  </a>
+                ) : (
+                  item.title
+                )}
               </h3>
               <p className="mt-2 text-sm text-zinc-400">{item.summary}</p>
             </CardContent>

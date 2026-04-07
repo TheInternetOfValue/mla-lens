@@ -57,6 +57,7 @@ export function PageTabs({ data }: PageTabsProps) {
         <SectionTitle
           title="Funds and project visibility"
           subtitle="A blunt proxy for where the money seems to be going."
+          provenance={data.money.provenance}
         />
         <div className="mt-4">
           <MoneyPanel projects={data.money.projects} />
@@ -67,6 +68,7 @@ export function PageTabs({ data }: PageTabsProps) {
         <SectionTitle
           title="News intelligence"
           subtitle="Signal extraction from public reporting."
+          provenance={data.news.provenance}
         />
         <div className="mt-4">
           <NewsPanel categories={data.news.categories} items={data.news.items} />
@@ -77,6 +79,7 @@ export function PageTabs({ data }: PageTabsProps) {
         <SectionTitle
           title="Citizen pulse"
           subtitle="This is the part that hurts more than a press release."
+          provenance={data.citizens.provenance}
         />
         <div className="mt-4">
           <CitizenPanel
@@ -101,6 +104,7 @@ export function PageTabs({ data }: PageTabsProps) {
         <SectionTitle
           title="MLA profile and trust layer"
           subtitle="Structured transparency beats vibes."
+          provenance={data.profile.provenance}
         />
         <div className="mt-4">
           <ProfilePanel

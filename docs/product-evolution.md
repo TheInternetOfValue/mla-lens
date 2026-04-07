@@ -93,3 +93,28 @@ Product impact:
 - MLA Lens now surfaces an explicit meaning layer above the raw panels without fetching new data.
 - Insights respond to changes in news volume, sentiment mix, coverage distribution, missing civic categories, and tracked project progress.
 - The insight layer is now more interpretation-driven, making the output more actionable without introducing AI-based inference.
+
+### First Trend Layer
+
+- Added a lightweight trend layer that compares current homepage signals against a prior snapshot.
+- Introduced deterministic trend signals for civic news volume, negative sentiment share, category concentration, and visible project completion.
+- Added a small trend strip near the insight strip without changing the overall page structure.
+
+Product impact:
+
+- MLA Lens now shows direction of change, not just current state.
+- The trend layer is isolated and easy to swap later for persisted snapshot history without changing the homepage layout.
+
+### Data Provenance And Source-Link Layer
+
+- Added a shared provenance model to distinguish live, derived, tentative, and fixture-backed data across the homepage view model.
+- Upgraded the live news pipeline so news items now carry source labels, source links, published timestamps, and explicit live or fixture provenance.
+- Added section-level provenance badges for news, projects, citizen sentiment, and profile sections.
+- Updated news cards so headlines and sources are clickable when live links exist.
+- Updated project cards to show explicit trust status while keeping the current layout and styling intact.
+
+Product impact:
+
+- Users can now tell which homepage signals are live-sourced, derived from current signals, tentative proxies, or static fixtures.
+- The trust layer is clearer without requiring a homepage redesign.
+- News is now more auditable because users can click through to source coverage directly from the feed.
