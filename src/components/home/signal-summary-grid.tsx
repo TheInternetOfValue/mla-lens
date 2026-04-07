@@ -1,4 +1,4 @@
-import type { SignalSummaryCard } from "@/data/mla-lens";
+import type { SignalSummaryCard } from "@/lib/mla-lens/homepage/types";
 
 import { signalSummaryIcons } from "@/components/home/home-icons";
 import { Card, CardContent } from "@/components/ui/card";

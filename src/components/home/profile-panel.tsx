@@ -1,5 +1,5 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import type { MLAProfileData } from "@/data/mla-lens";
+import type { MLAProfileData } from "@/lib/mla-lens/homepage/types";
 
 import { TinySparkline } from "@/components/home/tiny-sparkline";
 

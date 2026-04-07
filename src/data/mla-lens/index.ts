@@ -1,3 +1,4 @@
+// Fixture barrel for MLA Lens mock data and fallback pipeline inputs.
 export { citizenPulse, citizenTones } from "@/data/mla-lens/citizen-pulse";
 export {
   citizenSentimentPipeline,

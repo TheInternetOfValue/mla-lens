@@ -9,13 +9,17 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import type { OverviewData } from "@/data/mla-lens";
+import type {
+  OverviewData,
+  OverviewFastRead,
+} from "@/lib/mla-lens/homepage/types";
 
 interface OverviewPanelProps {
+  fastRead: OverviewFastRead;
   overview: OverviewData;
 }
 
-export function OverviewPanel({ overview }: OverviewPanelProps) {
+export function OverviewPanel({ fastRead, overview }: OverviewPanelProps) {
   return (
     <div className="grid gap-6 xl:grid-cols-[1.2fr_0.8fr]">
       <Card className="overflow-hidden border-zinc-800 bg-gradient-to-br from-zinc-950 via-zinc-950 to-zinc-900">
@@ -75,21 +79,21 @@ export function OverviewPanel({ overview }: OverviewPanelProps) {
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="rounded-2xl border border-zinc-800 bg-zinc-900/80 p-4">
-            <p className="text-sm font-medium text-zinc-200">Weakest layer</p>
-            <p className="mt-2 text-2xl font-semibold text-rose-300">
-              Citizen Sentiment
+            <p className="text-sm font-medium text-zinc-200">{fastRead.weakest.label}</p>
+            <p className={`mt-2 text-2xl font-semibold ${fastRead.weakest.titleClassName}`}>
+              {fastRead.weakest.title}
             </p>
             <p className="mt-1 text-sm text-zinc-400">
-              Complaint velocity still outweighs praise.
+              {fastRead.weakest.description}
             </p>
           </div>
           <div className="rounded-2xl border border-zinc-800 bg-zinc-900/80 p-4">
-            <p className="text-sm font-medium text-zinc-200">Strongest layer</p>
-            <p className="mt-2 text-2xl font-semibold text-amber-300">
-              Funds Signal
+            <p className="text-sm font-medium text-zinc-200">{fastRead.strongest.label}</p>
+            <p className={`mt-2 text-2xl font-semibold ${fastRead.strongest.titleClassName}`}>
+              {fastRead.strongest.title}
             </p>
             <p className="mt-1 text-sm text-zinc-400">
-              Visible project progress is better than the public mood suggests.
+              {fastRead.strongest.description}
             </p>
           </div>
           <Button className="w-full rounded-2xl bg-white text-black hover:bg-zinc-200">

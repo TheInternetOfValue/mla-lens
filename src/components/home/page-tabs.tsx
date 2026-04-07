@@ -1,13 +1,7 @@
 "use client";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import type {
-  CitizenSignal,
-  MapPinData,
-  MLAProfileData,
-  NewsItem,
-  ProjectData,
-} from "@/data/mla-lens";
+import type { MLALensHomepageData } from "@/lib/mla-lens/homepage/types";
 
 import { CitizenPanel } from "@/components/home/citizen-panel";
 import { MapPanel } from "@/components/home/map-panel";
@@ -17,26 +11,13 @@ import { ProfilePanel } from "@/components/home/profile-panel";
 import { SectionTitle } from "@/components/home/section-title";
 
 interface PageTabsProps {
-  citizenItems: CitizenSignal[];
-  citizenTones: readonly string[];
-  mapPins: MapPinData[];
-  mlaName: string;
-  newsCategories: readonly string[];
-  newsItems: NewsItem[];
-  profile: MLAProfileData;
-  projects: ProjectData[];
+  data: Pick<
+    MLALensHomepageData,
+    "citizens" | "map" | "money" | "news" | "profile"
+  >;
 }
 
-export function PageTabs({
-  citizenItems,
-  citizenTones,
-  mapPins,
-  mlaName,
-  newsCategories,
-  newsItems,
-  profile,
-  projects,
-}: PageTabsProps) {
+export function PageTabs({ data }: PageTabsProps) {
   return (
     <Tabs defaultValue="money" className="w-full">
       <TabsList className="grid w-full grid-cols-5 rounded-2xl bg-zinc-950 p-1">
@@ -78,7 +59,7 @@ export function PageTabs({
           subtitle="A blunt proxy for where the money seems to be going."
         />
         <div className="mt-4">
-          <MoneyPanel projects={projects} />
+          <MoneyPanel projects={data.money.projects} />
         </div>
       </TabsContent>
 
@@ -88,7 +69,7 @@ export function PageTabs({
           subtitle="Signal extraction from public reporting."
         />
         <div className="mt-4">
-          <NewsPanel categories={newsCategories} items={newsItems} />
+          <NewsPanel categories={data.news.categories} items={data.news.items} />
         </div>
       </TabsContent>
 
@@ -98,7 +79,11 @@ export function PageTabs({
           subtitle="This is the part that hurts more than a press release."
         />
         <div className="mt-4">
-          <CitizenPanel items={citizenItems} tones={citizenTones} />
+          <CitizenPanel
+            items={data.citizens.items}
+            summary={data.citizens.summary}
+            tones={data.citizens.tones}
+          />
         </div>
       </TabsContent>
 
@@ -108,7 +93,7 @@ export function PageTabs({
           subtitle="Soon real pins. For now, the UX spine."
         />
         <div className="mt-4">
-          <MapPanel pins={mapPins} />
+          <MapPanel pins={data.map.pins} />
         </div>
       </TabsContent>
 
@@ -118,7 +103,10 @@ export function PageTabs({
           subtitle="Structured transparency beats vibes."
         />
         <div className="mt-4">
-          <ProfilePanel mlaName={mlaName} profile={profile} />
+          <ProfilePanel
+            mlaName={data.profile.mlaName}
+            profile={data.profile.profile}
+          />
         </div>
       </TabsContent>
     </Tabs>

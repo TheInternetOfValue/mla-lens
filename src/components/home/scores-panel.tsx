@@ -2,7 +2,7 @@
 
 import { MetricCard } from "@/components/home/metric-card";
 import { scoreCardIcons } from "@/components/home/home-icons";
-import type { ScoreCardData } from "@/data/mla-lens";
+import type { ScoreCardData } from "@/lib/mla-lens/homepage/types";
 
 interface ScoresPanelProps {
   cards: ScoreCardData[];

@@ -4,7 +4,7 @@ import { useState } from "react";
 import { MapPinned } from "lucide-react";
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import type { MapPinData } from "@/data/mla-lens";
+import type { MapPinData } from "@/lib/mla-lens/homepage/types";
 
 import { StatusBadge, statusTone } from "@/components/home/status-badge";
 

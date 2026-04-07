@@ -5,7 +5,7 @@ import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import type { NewsItem } from "@/data/mla-lens";
+import type { NewsItem } from "@/lib/mla-lens/homepage/types";
 
 import { StatusBadge } from "@/components/home/status-badge";
 

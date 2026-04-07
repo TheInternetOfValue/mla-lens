@@ -7,16 +7,20 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import type { CitizenSignal } from "@/data/mla-lens";
+import type {
+  CitizenPanelSummary,
+  CitizenSignal,
+} from "@/lib/mla-lens/homepage/types";
 
 import { StatusBadge } from "@/components/home/status-badge";
 
 interface CitizenPanelProps {
   items: CitizenSignal[];
+  summary: CitizenPanelSummary;
   tones: readonly string[];
 }
 
-export function CitizenPanel({ items, tones }: CitizenPanelProps) {
+export function CitizenPanel({ items, summary, tones }: CitizenPanelProps) {
   const [query, setQuery] = useState("");
   const [toneFilter, setToneFilter] = useState("All");
 
@@ -40,15 +44,17 @@ export function CitizenPanel({ items, tones }: CitizenPanelProps) {
         <CardContent className="space-y-4">
           <div className="rounded-2xl border border-zinc-800 bg-zinc-900/80 p-4">
             <p className="text-sm text-zinc-400">Sentiment score</p>
-            <p className="mt-2 text-3xl font-bold text-white">48 / 100</p>
+            <p className="mt-2 text-3xl font-bold text-white">
+              {summary.sentimentScore} / 100
+            </p>
             <p className="mt-2 text-sm text-zinc-400">
-              Complaints still dominate the public surface area.
+              {summary.sentimentSummary}
             </p>
           </div>
           <div className="rounded-2xl border border-zinc-800 bg-zinc-900/80 p-4">
             <p className="text-sm text-zinc-400">Top issue</p>
             <p className="mt-2 text-lg font-semibold text-rose-300">
-              Water + drainage reliability
+              {summary.topIssue}
             </p>
           </div>
         </CardContent>

@@ -1,5 +1,5 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import type { ProjectData } from "@/data/mla-lens";
+import type { ProjectData } from "@/lib/mla-lens/homepage/types";
 
 import { StatusBadge } from "@/components/home/status-badge";
 
