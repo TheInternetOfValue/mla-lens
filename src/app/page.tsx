@@ -1,9 +1,9 @@
-import MLALensUIPrototype from "@/components/mla-lens-ui-prototype";
+import { MLALensHomepage } from "@/components/home/mla-lens-homepage";
 
 export default function Home() {
   return (
     <main>
-      <MLALensUIPrototype />
+      <MLALensHomepage />
     </main>
   );
 }
