@@ -8,6 +8,7 @@ import type {
   OverviewData,
   ProjectData,
   ScoreCardData,
+  SignalStrength,
   SignalSummaryCard,
 } from "@/data/mla-lens/types";
 
@@ -19,10 +20,17 @@ export type {
   OverviewData,
   ProjectData,
   ScoreCardData,
+  SignalStrength,
   SignalSummaryCard,
 };
 
-export type ProvenanceStatus = "live" | "derived" | "tentative" | "fixture";
+export type ProvenanceStatus =
+  | "live"
+  | "derived"
+  | "official"
+  | "corroborated"
+  | "tentative"
+  | "fixture";
 
 export interface Provenance {
   status: ProvenanceStatus;
@@ -32,6 +40,13 @@ export interface Provenance {
   updatedAt?: string;
 }
 
+export interface EvidenceLink {
+  label: string;
+  url: string;
+}
+
+export type ExtractionGranularity = "row" | "bundle" | "summary";
+
 export interface HomepageNewsItem extends NewsItem {
   sourceLabel?: string;
   sourceUrl?: string;
@@ -40,8 +55,24 @@ export interface HomepageNewsItem extends NewsItem {
 }
 
 export interface HomepageProjectItem extends ProjectData {
+  amount?: number;
+  amountDisplay?: string;
+  implementingAgency?: string;
+  sourceLabel?: string;
   sourceUrl?: string;
+  evidenceLinks?: EvidenceLink[];
+  extractionGranularity: ExtractionGranularity;
   provenance: Provenance;
+}
+
+export interface MoneySchemeMetadata {
+  schemeName: string;
+  schemeYear: string;
+  annualAllocation: string;
+  sourceLabel: string;
+  sourceUrl: string;
+  note?: string;
+  evidenceLinks?: EvidenceLink[];
 }
 
 export interface OverviewFastReadCard {
@@ -93,6 +124,7 @@ export interface MLALensHomepageData {
   };
   money: {
     projects: HomepageProjectItem[];
+    scheme?: MoneySchemeMetadata;
     provenance: Provenance;
   };
   map: {

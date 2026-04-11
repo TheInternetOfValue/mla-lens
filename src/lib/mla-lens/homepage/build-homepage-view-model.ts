@@ -242,6 +242,7 @@ export function buildHomepageViewModel({
     },
     money: {
       projects: projectFunds.projects,
+      scheme: projectFunds.scheme,
       provenance: projectFunds.provenance,
     },
     map: {

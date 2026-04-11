@@ -8,6 +8,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import type { HomepageNewsItem } from "@/lib/mla-lens/homepage/types";
 
 import { ProvenanceBadge } from "@/components/home/provenance-badge";
+import { SignalStrengthIndicator } from "@/components/home/signal-strength-indicator";
 import { StatusBadge } from "@/components/home/status-badge";
 
 interface NewsPanelProps {
@@ -51,6 +52,7 @@ export function NewsPanel({ categories, items }: NewsPanelProps) {
                   {item.category}
                 </Badge>
                 <ProvenanceBadge provenance={item.provenance} />
+                <SignalStrengthIndicator signalStrength={item.signalStrength} />
               </div>
               <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-zinc-500">
                 {item.sourceLabel ? (

@@ -1,5 +1,6 @@
 import type { Insight } from "@/lib/mla-lens/homepage/insights";
 
+import { SignalStrengthIndicator } from "@/components/home/signal-strength-indicator";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 
@@ -19,9 +20,14 @@ export function InsightStrip({ insights }: InsightStripProps) {
       {insights.map((insight) => (
           <Card key={insight.id} className="border-zinc-800 bg-zinc-950/70">
             <CardContent className="space-y-3 p-4">
-              <Badge className={`rounded-full border ${toneStyles[insight.tone]}`}>
-                {insight.tone}
-              </Badge>
+              <div className="flex flex-wrap items-center gap-2">
+                <Badge className={`rounded-full border ${toneStyles[insight.tone]}`}>
+                  {insight.tone}
+                </Badge>
+                <SignalStrengthIndicator
+                  signalStrength={insight.signalStrength}
+                />
+              </div>
               <div>
                 <h3 className="text-sm font-semibold text-white">{insight.title}</h3>
                 <p className="mt-2 text-sm leading-6 text-zinc-400">

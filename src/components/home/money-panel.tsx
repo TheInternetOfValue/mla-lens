@@ -1,14 +1,20 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import type { HomepageProjectItem } from "@/lib/mla-lens/homepage/types";
+import type {
+  HomepageProjectItem,
+  MoneySchemeMetadata,
+} from "@/lib/mla-lens/homepage/types";
 
+import { GranularityBadge } from "@/components/home/granularity-badge";
 import { ProvenanceBadge } from "@/components/home/provenance-badge";
+import { SignalStrengthIndicator } from "@/components/home/signal-strength-indicator";
 import { StatusBadge } from "@/components/home/status-badge";
 
 interface MoneyPanelProps {
   projects: HomepageProjectItem[];
+  scheme?: MoneySchemeMetadata;
 }
 
-export function MoneyPanel({ projects }: MoneyPanelProps) {
+export function MoneyPanel({ projects, scheme }: MoneyPanelProps) {
   const completed = projects.filter((project) => project.status === "Completed");
   const ongoing = projects.filter((project) => project.status === "Ongoing");
   const unclear = projects.filter((project) => project.status === "Unclear");
@@ -19,7 +25,7 @@ export function MoneyPanel({ projects }: MoneyPanelProps) {
         <CardHeader>
           <CardTitle className="text-white">Follow the money</CardTitle>
           <CardDescription className="text-zinc-400">
-            A simple proxy first. Fancy governance theater can come later.
+            Official sources first. Row-level parsing is still in progress.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -50,12 +56,36 @@ export function MoneyPanel({ projects }: MoneyPanelProps) {
             </div>
           </div>
           <div className="rounded-2xl border border-zinc-800 bg-zinc-900/80 p-4">
-            <p className="text-sm text-zinc-400">Takeaway</p>
-            <p className="mt-2 text-sm text-zinc-300">
-              This section is designed for later hookup to automated tender,
-              PDF, and news extraction. Right now it gives you the product
-              spine.
-            </p>
+            <p className="text-sm text-zinc-400">Official scheme baseline</p>
+            {scheme ? (
+              <>
+                <p className="mt-2 text-sm text-zinc-200">
+                  {scheme.schemeYear} allocation: {scheme.annualAllocation}
+                </p>
+                <p className="mt-2 text-sm text-zinc-400">{scheme.note}</p>
+                <p className="mt-2 text-xs text-zinc-500">
+                  Current money records are officially sourced, but most project
+                  entries are still bundle- or summary-level references rather
+                  than fully parsed row-level work items.
+                </p>
+                <p className="mt-3 text-sm text-zinc-500">
+                  Source:{" "}
+                  <a
+                    href={scheme.sourceUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="transition hover:text-zinc-300 hover:underline"
+                  >
+                    {scheme.sourceLabel}
+                  </a>
+                </p>
+              </>
+            ) : (
+              <p className="mt-2 text-sm text-zinc-300">
+                Official scheme metadata is not available right now, so the
+                section is using the current fallback tracker.
+              </p>
+            )}
           </div>
         </CardContent>
       </Card>
@@ -80,10 +110,21 @@ export function MoneyPanel({ projects }: MoneyPanelProps) {
                       <p className="font-medium text-white">{project.name}</p>
                       <StatusBadge value={project.status} />
                       <ProvenanceBadge provenance={project.provenance} />
+                      <GranularityBadge
+                        granularity={project.extractionGranularity}
+                      />
+                      <SignalStrengthIndicator
+                        signalStrength={project.signalStrength}
+                      />
                     </div>
                     <p className="mt-2 text-sm text-zinc-400">
                       {project.area} · {project.category}
                     </p>
+                    {project.implementingAgency ? (
+                      <p className="mt-2 text-sm text-zinc-500">
+                        Implementing agency: {project.implementingAgency}
+                      </p>
+                    ) : null}
                     <p className="mt-2 text-sm text-zinc-500">
                       Source:{" "}
                       {project.sourceUrl ? (
@@ -99,9 +140,15 @@ export function MoneyPanel({ projects }: MoneyPanelProps) {
                         project.source
                       )}
                     </p>
+                    {project.evidenceLinks && project.evidenceLinks.length > 0 ? (
+                      <p className="mt-2 text-xs text-zinc-500">
+                        {project.evidenceLinks.length} official reference
+                        {project.evidenceLinks.length === 1 ? "" : "s"}
+                      </p>
+                    ) : null}
                   </div>
                   <div className="rounded-2xl border border-zinc-800 px-3 py-2 text-sm text-zinc-200">
-                    {project.budget}
+                    {project.amountDisplay ?? project.budget}
                   </div>
                 </div>
               </div>

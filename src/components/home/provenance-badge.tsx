@@ -5,6 +5,8 @@ import { cn } from "@/lib/utils";
 const provenanceTone: Record<ProvenanceStatus, string> = {
   live: "border-emerald-500/30 bg-emerald-500/15 text-emerald-300",
   derived: "border-sky-500/30 bg-sky-500/15 text-sky-300",
+  official: "border-teal-500/30 bg-teal-500/15 text-teal-300",
+  corroborated: "border-indigo-500/30 bg-indigo-500/15 text-indigo-300",
   tentative: "border-amber-500/30 bg-amber-500/15 text-amber-300",
   fixture: "border-zinc-700 bg-zinc-800/80 text-zinc-300",
 };

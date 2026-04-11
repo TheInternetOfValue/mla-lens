@@ -60,7 +60,7 @@ export function PageTabs({ data }: PageTabsProps) {
           provenance={data.money.provenance}
         />
         <div className="mt-4">
-          <MoneyPanel projects={data.money.projects} />
+          <MoneyPanel projects={data.money.projects} scheme={data.money.scheme} />
         </div>
       </TabsContent>
 

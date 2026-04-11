@@ -1,4 +1,5 @@
 export type InsightType = "warning" | "success";
+export type SignalStrength = "low" | "medium" | "high";
 
 export interface OverviewInsight {
   type: InsightType;
@@ -35,6 +36,7 @@ export interface ProjectData {
   area: string;
   source: string;
   category: string;
+  signalStrength?: SignalStrength;
 }
 
 export type NewsTag = "Positive" | "Negative" | "Neutral";
@@ -46,6 +48,7 @@ export interface NewsItem {
   category: string;
   date: string;
   summary: string;
+  signalStrength?: SignalStrength;
 }
 
 export type CitizenTone = "Complaint" | "Mixed" | "Praise";

@@ -1,5 +1,5 @@
 import { newsCategories, newsFeed } from "@/data/mla-lens/news-feed";
-import type { NewsItem } from "@/data/mla-lens/types";
+import type { NewsItem, SignalStrength } from "@/data/mla-lens/types";
 import type { HomepageNewsItem, Provenance } from "@/lib/mla-lens/homepage/types";
 
 export interface NewsFeedData {
@@ -18,10 +18,14 @@ interface ParsedRssItem {
 interface NormalizedNewsItem {
   category: NewsItem["category"];
   date: string;
+  hasDirectConstituencyMatch: boolean;
+  hasDistrictMatch: boolean;
+  hasMlaMention: boolean;
   link: string;
   publishedAt: Date | null;
   rawTitle: string;
   relevanceScore: number;
+  signalStrength: SignalStrength;
   source: string;
   summary: string;
   tag: NewsItem["tag"];
@@ -405,6 +409,34 @@ function formatPublishedDate(pubDate: string): { date: string; publishedAt: Date
   };
 }
 
+function hasMlaMention(text: string): boolean {
+  return hasAnyKeyword(text, ["abdul wahab", "m abdul wahab", "m. abdul wahab", "mla"]);
+}
+
+function deriveNewsSignalStrength({
+  hasDirectConstituencyMatch,
+  hasDistrictMatch,
+  hasMlaMention: hasMlaReference,
+}: {
+  hasDirectConstituencyMatch: boolean;
+  hasDistrictMatch: boolean;
+  hasMlaMention: boolean;
+}): SignalStrength {
+  if (hasDirectConstituencyMatch && hasMlaReference) {
+    return "high";
+  }
+
+  if (hasDirectConstituencyMatch) {
+    return "medium";
+  }
+
+  if (hasDistrictMatch) {
+    return "low";
+  }
+
+  return "low";
+}
+
 function normalizeTitle(title: string): string {
   return title.replace(/\s+-\s+[^-]+$/, "").trim();
 }
@@ -436,6 +468,9 @@ function normalizeRssItem(item: ParsedRssItem): NormalizedNewsItem | null {
   }
 
   const relevanceScore = scoreConstituencyRelevance(combinedText);
+  const directConstituencyMatch = hasAnyKeyword(combinedText, constituencyKeywords);
+  const districtMatch = hasAnyKeyword(combinedText, districtKeywords);
+  const mlaMention = hasMlaMention(combinedText);
 
   if (!isRelevantCivicStory(combinedText, relevanceScore, category)) {
     return null;
@@ -452,6 +487,14 @@ function normalizeRssItem(item: ParsedRssItem): NormalizedNewsItem | null {
     category,
     tag: classifySentiment(combinedText),
     relevanceScore,
+    signalStrength: deriveNewsSignalStrength({
+      hasDirectConstituencyMatch: directConstituencyMatch,
+      hasDistrictMatch: districtMatch,
+      hasMlaMention: mlaMention,
+    }),
+    hasDirectConstituencyMatch: directConstituencyMatch,
+    hasDistrictMatch: districtMatch,
+    hasMlaMention: mlaMention,
     date,
     publishedAt,
   };
@@ -505,6 +548,7 @@ function buildLiveNewsItem(
     category: item.category,
     date: item.date,
     summary: item.summary,
+    signalStrength: item.signalStrength,
     sourceLabel: item.source,
     sourceUrl: item.link,
     publishedAt: item.publishedAt?.toISOString(),
@@ -522,6 +566,7 @@ function mapFixtureNewsItem(item: NewsItem): HomepageNewsItem {
   return {
     ...item,
     sourceLabel: "Fixture news sample",
+    signalStrength: "low",
     provenance: {
       status: "fixture",
       label: "Fixture",

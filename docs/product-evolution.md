@@ -118,3 +118,41 @@ Product impact:
 - Users can now tell which homepage signals are live-sourced, derived from current signals, tentative proxies, or static fixtures.
 - The trust layer is clearer without requiring a homepage redesign.
 - News is now more auditable because users can click through to source coverage directly from the feed.
+
+### Lightweight Signal-Strength Layer
+
+- Added a shared `low` / `medium` / `high` signal-strength model across news items, project items, and homepage insights.
+- Upgraded the news pipeline to score each item based on how directly it matches the constituency, civic topic, and current MLA.
+- Added deterministic project signal strength based on whether the current project source text points to single-source evidence, multiple references, or weak linkage.
+- Upgraded insights so they now express whether they are backed by multiple aligned signals, one strong section-level signal, or sparse evidence.
+- Added a subtle strength indicator to insight cards, news cards, and project cards without changing the current layout.
+
+Product impact:
+
+- MLA Lens now communicates not just what a signal says, but how strong the underlying evidence is.
+- The trust layer is more interpretable while staying deterministic and lightweight.
+
+### First Official Money Layer
+
+- Replaced the fixture-only money baseline with an official-data-first pipeline built from TNRD MLACDS records and Tirunelveli district sanction-order pages.
+- Added MLACDS scheme metadata for the current public baseline, including scheme year, annual allocation, and official TNRD source links.
+- Added Palayamkottai-specific district sanction-order bundles from the Tirunelveli 15th CFC administrative-order page with direct PDF links.
+- Upgraded project cards so they can show official source links, implementing agency, trust label, and reference count while keeping the current layout intact.
+- Kept fixture fallback in place when official extraction fails or returns nothing useful.
+
+Product impact:
+
+- The money/projects section is now grounded in official public sources first, instead of relying primarily on mock project cards.
+- Users can click through to district sanction-order PDFs and the governing MLACDS order directly from the UI.
+- The section is more traceable, while still staying honest about fields that are not yet extractable from the current official sources.
+
+### Money Granularity Labels
+
+- Added a separate extraction-granularity field for money records so trust and precision are no longer conflated.
+- Marked the MLACDS baseline as `summary` and the current official sanction-order records as `bundle`.
+- Updated money cards to show both trust and granularity labels, plus a short explanation that the official money layer is not yet parsed down to row-level work items.
+
+Product impact:
+
+- The UI no longer risks implying row-level financial precision where only bundle-level official orders are currently available.
+- Users can distinguish source trust from extraction precision at a glance.
